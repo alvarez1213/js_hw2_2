@@ -6,14 +6,19 @@ class Game {
     this.lossElement = container.querySelector('.status__loss');
 
     this.reset();
-
     this.registerEvents();
+
+    this.timerId = null
+    this.timer = 10
+    this.startTime = Date.now()
+    this.timerElement = container.querySelector('.timer')
+    this.resetTimer()
   }
 
   reset() {
     this.setNewWord();
     this.winsElement.textContent = 0;
-    this.lossElement.textContent = 0;
+    this.lossElement.textContent = 0;        
   }
 
   registerEvents() {
@@ -30,7 +35,7 @@ class Game {
       const cur = this.currentSymbol
       
       // если шифт, то выходим
-      if (e.key === 'Shift') {
+      if (e.key === 'Shift' || e.key === 'Enter' || e.key === 'Escape') {
         return
       }
       
@@ -44,6 +49,23 @@ class Game {
 
     // добавляем обработчик нажатия
     document.addEventListener('keydown', onKey)
+  }
+
+  updateTimer() {
+    if (this.timer === 0) {
+      this.fail()
+      
+      return
+    }
+    this.timer--
+    console.log(this.timer)
+    this.timerElement.textContent = this.timer
+  }
+
+  resetTimer() {
+    this.startTime = Date.now()
+    this.timerId = setInterval(this.updateTimer.bind(this), 1000)
+    this.timer = 10
   }
 
   success() {
@@ -61,6 +83,8 @@ class Game {
       this.reset();
     }
     this.setNewWord();
+    clearInterval(this.timerId)
+    this.resetTimer()
   }
 
   fail() {
@@ -69,11 +93,12 @@ class Game {
       this.reset();
     }
     this.setNewWord();
+    clearInterval(this.timerId)
+    this.resetTimer()
   }
 
   setNewWord() {
     const word = this.getWord();
-
     this.renderWord(word);
   }
 
