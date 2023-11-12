@@ -9,10 +9,10 @@ class Game {
     this.registerEvents();
 
     this.timerId = null
-    this.timer = 10
+    this.timer = 0
     this.startTime = Date.now()
     this.timerElement = container.querySelector('.timer')
-    this.resetTimer()
+    this.resetTimer()    
   }
 
   reset() {
@@ -58,14 +58,14 @@ class Game {
       return
     }
     this.timer--
-    console.log(this.timer)
     this.timerElement.textContent = this.timer
   }
 
   resetTimer() {
     this.startTime = Date.now()
     this.timerId = setInterval(this.updateTimer.bind(this), 1000)
-    this.timer = 10
+    this.timer = this.wordElement.innerText.length
+    this.timerElement.textContent = this.timer    
   }
 
   success() {
